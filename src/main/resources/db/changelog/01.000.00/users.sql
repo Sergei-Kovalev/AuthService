@@ -3,9 +3,7 @@
 CREATE TABLE users
 (
     id                  UUID                            NOT NULL,
-    username            VARCHAR                         NOT NULL,
-    password            VARCHAR                         NOT NULL,
-    email               VARCHAR,
+    email               VARCHAR                         NOT NULL,
     confirmation_code   VARCHAR(10),
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
