@@ -1,6 +1,7 @@
 package jdev.kovalev.controller.handler;
 
 import io.jsonwebtoken.JwtException;
+import jakarta.validation.ConstraintViolationException;
 import jdev.kovalev.exception.ConfirmationCodeNotValidException;
 import jdev.kovalev.exception.EmailNotRegisteredException;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,7 @@ public class ControllersExceptionHandler {
 
     @ExceptionHandler({
             IllegalArgumentException.class,
+            ConstraintViolationException.class,
             HttpMessageNotReadableException.class})
     public ResponseEntity<CustomErrorResponse> handleIllegalArgumentException(Exception e, WebRequest request) {
         CustomErrorResponse errorResponse = new CustomErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST, request);
