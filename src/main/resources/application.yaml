@@ -5,7 +5,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/auth_db
-#    url: jdbc:postgresql://PostgreSQL:5432/auth_db
+    #    url: jdbc:postgresql://PostgreSQL:5432/auth_db
     username: postgres
     password: postgres
     hikari:
@@ -19,6 +19,23 @@ spring:
     hibernate:
       ddl-auto: none
 
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9094
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping:
+          EventForNotificationSrv: jdev.kovalev.dto.kafka.EventForNotificationSrv
+        spring.json.trusted.packages: 'jdev.kovalev.dto.kafka'
+        enable.idempotence: true
+        acks: all
+        retries: 100
+
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+jwt:
+  secret: 6d0846f9164e22e86be8e54a3d87c8673a17d042068abb348ba4a9fb895356218d3342c0d975fe4c32a1f6bd65aed3aeca84505cc19e63a743c63fa28fadc3c21b7b27c576578b4fca0e93522086f1a3e42c512c479fb828e817eef948a4fc417bc462b41e508019b0489ccf8ce66d8da3cfcaadef2b433d929beddff4b94d5b16d8692d66e12ca745f66558065ad9346632bfa6fda1159ddb615be62282799eadd9f7c3395ab4f45a4856c7ef98b668fdc69131661bba7b2aac466f5565bbb7b86ef33763e2bc0064fec163f6d6f41f381320451d5b46146deb4587c1116e46186b108c535d0db409ba77bd57827bf7adb4067a0fff795a9478a5045a747850
+  lifetime: 10m
