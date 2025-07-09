@@ -1,11 +1,13 @@
 package jdev.kovalev.service.impl;
 
+import jdev.kovalev.dto.kafka.EventForNotificationSrv;
 import jdev.kovalev.entity.User;
 import jdev.kovalev.exception.ConfirmationCodeNotValidException;
 import jdev.kovalev.exception.EmailNotRegisteredException;
 import jdev.kovalev.repository.UserRepository;
 import jdev.kovalev.service.AuthService;
 import jdev.kovalev.service.JwtService;
+import jdev.kovalev.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +17,11 @@ import java.security.SecureRandom;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private static final String SENT_SUCCESSFULLY = "Verification code sent to %s successfully";
+    private static final String SENT_SUCCESSFULLY = "Confirmation code sent to %s successfully";
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final KafkaProducerService kafkaProducerService;
 
     @Transactional
     @Override
@@ -32,8 +35,11 @@ public class AuthServiceImpl implements AuthService {
                                                           .email(email)
                                                           .confirmationCode(confirmationCode)
                                                           .build()));
-        //TODO отправка по кафка
-        System.out.println(confirmationCode);
+
+        kafkaProducerService.sendConfirmationCode(EventForNotificationSrv.builder()
+                                                          .email(email)
+                                                          .confirmationCode(confirmationCode)
+                                                          .build());
 
         return String.format(SENT_SUCCESSFULLY, email);
     }

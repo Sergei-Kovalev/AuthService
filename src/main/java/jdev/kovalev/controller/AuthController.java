@@ -1,5 +1,6 @@
 package jdev.kovalev.controller;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jdev.kovalev.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> createVerificationCode(@RequestParam
-                                             @NotBlank(message = "Email не может быть пустым")
-                                             String email) {
+                                                    @NotBlank(message = "Email не может быть пустым")
+                                                    @Email(message = "Wrong Email format")
+                                                    String email) {
         return ResponseEntity.ok(authService.createVerificationCode(email));
     }
 
@@ -31,6 +33,7 @@ public class AuthController {
                                          String confirmationCode,
                                          @RequestParam
                                          @NotBlank(message = "Email не может быть пустым")
+                                         @Email(message = "Wrong Email format")
                                          String email) {
         return ResponseEntity.ok(authService.createAuthToken(confirmationCode, email));
     }
